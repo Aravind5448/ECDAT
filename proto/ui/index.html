@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECDAT — Cryptographic Discovery &amp; Analysis</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2.8 19 5.6v5.1c0 4.7-2.9 8.8-7 10.5-4.1-1.7-7-5.8-7-10.5V5.6L12 2.8Z"></path>
+          <path d="M8.5 12h7M12 8.5v7"></path>
+          <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"></circle>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">ECDAT</div>
+        <div class="brand-sub">SIH26164 · NTRO</div>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <div class="nav-label">Analysis</div>
+      <a href="#/overview"    data-v="overview">    <span class="ico" data-i="grid"></span>    Command Centre</a>
+      <a href="#/inventory"   data-v="inventory">   <span class="ico" data-i="list"></span>    Crypto Inventory <span class="nav-count" id="nc-inv"></span></a>
+      <a href="#/criticality" data-v="criticality"> <span class="ico" data-i="target"></span>  Business Criticality</a>
+      <a href="#/mosca"       data-v="mosca">       <span class="ico" data-i="clock"></span>   Mosca Horizon</a>
+      <div class="nav-label" style="margin-top:14px">Migration</div>
+      <a href="#/passport"    data-v="passport">    <span class="ico" data-i="zap"></span>     Migration Passport</a>
+      <a href="#/cbom"        data-v="cbom">        <span class="ico" data-i="file"></span>    CBOM Export</a>
+      <div class="nav-label" style="margin-top:14px">Assurance</div>
+      <a href="#/method"      data-v="method">      <span class="ico" data-i="book"></span>    Method &amp; Limits</a>
+    </nav>
+
+    <div class="side-foot">
+      <div class="airgap"><span class="dot"></span> Air-gapped · no network calls</div>
+      <div>ECDAT <code id="foot-ver"></code></div>
+      <div id="foot-env"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="tb-title">Command Centre</h1>
+        <div class="crumb" id="tb-crumb"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="repo-switch" id="repo-switch"></div>
+        <div class="stamp" id="tb-stamp"></div>
+      </div>
+    </header>
+
+    <div class="page" id="page"></div>
+  </main>
+</div>
+
+<div class="drawer-scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-h" id="drawer-h"></div>
+  <div class="drawer-b" id="drawer-b"></div>
+</aside>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

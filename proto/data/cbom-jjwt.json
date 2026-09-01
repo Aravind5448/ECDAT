@@ -1,0 +1,1241 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:3ad7dabc-0000-4000-8000-e3aba2066e95",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-31T00:00:00+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "ECDAT",
+          "version": "0.9.0-prototype",
+          "description": "Enterprise Cryptographic Discovery & Analysis Tool"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "bom-ref": "crypto:app:e3aba2066e95aff8",
+      "name": "JJWT (Java JWT)",
+      "description": "The most widely used JWT library on the JVM. Signature algorithm selection is its core concern, which makes it a dense source of RSA/ECDSA evidence."
+    },
+    "properties": [
+      {
+        "name": "ecdat:ruleset_version",
+        "value": "0.9.0-prototype"
+      },
+      {
+        "name": "ecdat:rules_evaluated",
+        "value": "56"
+      },
+      {
+        "name": "ecdat:source_files_scanned",
+        "value": "407"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:735ffe35e5c4accf",
+      "name": "CSPRNG",
+      "description": "Cryptographically secure randomness source.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "drbg",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "generate"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "2"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Cryptographically secure randomness source."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/Randoms.java",
+            "line": 28,
+            "offset": 33,
+            "additionalContext": "DEFAULT_SECURE_RANDOM = new SecureRandom();"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/Randoms.java",
+            "line": 41,
+            "offset": 36,
+            "additionalContext": "*     DEFAULT_SECURE_RANDOM = new SecureRandom();"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:2ff063a21bc0ed86",
+      "name": "ECDSA",
+      "description": "Shor's algorithm solves the elliptic-curve discrete log, recovering the signing key.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "12"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Shor's algorithm solves the elliptic-curve discrete log, recovering the signing key."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-DSA (FIPS 204)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 269,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm ES256 = Jwts.get(REGISTRY, \"ES256\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 276,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm ES384 = Jwts.get(REGISTRY, \"ES384\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 283,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm ES512 = Jwts.get(REGISTRY, \"ES512\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 118,
+            "offset": 13,
+            "additionalContext": "SignatureAlgorithm.ES512, SignatureAlgorithm.ES384, SignatureAlgorithm.ES256));"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 118,
+            "offset": 39,
+            "additionalContext": "SignatureAlgorithm.ES512, SignatureAlgorithm.ES384, SignatureAlgorithm.ES256));"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 118,
+            "offset": 65,
+            "additionalContext": "SignatureAlgorithm.ES512, SignatureAlgorithm.ES384, SignatureAlgorithm.ES256));"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 80,
+            "offset": 11,
+            "additionalContext": "ES256(\"ES256\", \"ECDSA using P-256 and SHA-256\", \"ECDSA\", \"SHA256withECDSA\", true, 256, 256),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 85,
+            "offset": 11,
+            "additionalContext": "ES384(\"ES384\", \"ECDSA using P-384 and SHA-384\", \"ECDSA\", \"SHA384withECDSA\", true, 384, 384),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 90,
+            "offset": 11,
+            "additionalContext": "ES512(\"ES512\", \"ECDSA using P-521 and SHA-512\", \"ECDSA\", \"SHA512withECDSA\", true, 512, 521),"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 44,
+            "offset": 19,
+            "additionalContext": "EcSignatureAlgorithm.ES256,"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 45,
+            "offset": 19,
+            "additionalContext": "EcSignatureAlgorithm.ES384,"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 46,
+            "offset": 19,
+            "additionalContext": "EcSignatureAlgorithm.ES512,"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:7ad4e9a1561fd985",
+      "name": "Ed25519",
+      "description": "Edwards-curve signature. Shor applies to the discrete log exactly as for ECDSA.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "5"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Edwards-curve signature. Shor applies to the discrete log exactly as for ECDSA."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-DSA (FIPS 204)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 304,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm EdDSA = Jwts.get(REGISTRY, \"EdDSA\");"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/EdSignatureAlgorithm.java",
+            "line": 30,
+            "offset": 38,
+            "additionalContext": "private static final String ID = \"EdDSA\";"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/EdSignatureAlgorithm.java",
+            "line": 51,
+            "offset": 88,
+            "additionalContext": "// If we're signing, and this instance's algorithm name is the default/generic 'EdDSA', then prefer the"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/EdSignatureAlgorithm.java",
+            "line": 53,
+            "offset": 27,
+            "additionalContext": "// (while generic 'EdDSA' is fine for validation)"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/EdwardsCurve.java",
+            "line": 297,
+            "offset": 16,
+            "additionalContext": "return \"EdDSA\".equals(alg) || \"XDH\".equals(alg) || findByKey(key) != null;"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:380eb30f2d5ab1cd",
+      "name": "HMAC",
+      "description": "Security rests on the key, not on collision resistance. No practical quantum advantage.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "12"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Security rests on the key, not on collision resistance. No practical quantum advantage."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 194,
+            "offset": 69,
+            "additionalContext": "public static final MacAlgorithm HS256 = Jwts.get(REGISTRY, \"HS256\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 201,
+            "offset": 69,
+            "additionalContext": "public static final MacAlgorithm HS384 = Jwts.get(REGISTRY, \"HS384\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 208,
+            "offset": 69,
+            "additionalContext": "public static final MacAlgorithm HS512 = Jwts.get(REGISTRY, \"HS512\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 115,
+            "offset": 13,
+            "additionalContext": "SignatureAlgorithm.HS512, SignatureAlgorithm.HS384, SignatureAlgorithm.HS256));"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 115,
+            "offset": 39,
+            "additionalContext": "SignatureAlgorithm.HS512, SignatureAlgorithm.HS384, SignatureAlgorithm.HS256));"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 115,
+            "offset": 65,
+            "additionalContext": "SignatureAlgorithm.HS512, SignatureAlgorithm.HS384, SignatureAlgorithm.HS256));"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 50,
+            "offset": 11,
+            "additionalContext": "HS256(\"HS256\", \"HMAC using SHA-256\", \"HMAC\", \"HmacSHA256\", true, 256, 256, \"1.2.840.113549.2.9\"),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 55,
+            "offset": 11,
+            "additionalContext": "HS384(\"HS384\", \"HMAC using SHA-384\", \"HMAC\", \"HmacSHA384\", true, 384, 384, \"1.2.840.113549.2.10\"),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 60,
+            "offset": 11,
+            "additionalContext": "HS512(\"HS512\", \"HMAC using SHA-512\", \"HMAC\", \"HmacSHA512\", true, 512, 512, \"1.2.840.113549.2.11\"),"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/DefaultMacAlgorithm.java",
+            "line": 51,
+            "offset": 92,
+            "additionalContext": "private static final Set<String> JWA_STANDARD_IDS = new LinkedHashSet<>(Collections.of(\"HS256\", \"HS384\", \"HS512\"));"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/DefaultMacAlgorithm.java",
+            "line": 51,
+            "offset": 101,
+            "additionalContext": "private static final Set<String> JWA_STANDARD_IDS = new LinkedHashSet<>(Collections.of(\"HS256\", \"HS384\", \"HS512\"));"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/DefaultMacAlgorithm.java",
+            "line": 51,
+            "offset": 110,
+            "additionalContext": "private static final Set<String> JWA_STANDARD_IDS = new LinkedHashSet<>(Collections.of(\"HS256\", \"HS384\", \"HS512\"));"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:56d91d770f6fd64e",
+      "name": "RSA",
+      "description": "Shor's algorithm factors the modulus, recovering the private key from the public key.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "18"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Shor's algorithm factors the modulus, recovering the private key from the public key."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-KEM (key transport) / ML-DSA (signatures)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 215,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm RS256 = Jwts.get(REGISTRY, \"RS256\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 222,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm RS384 = Jwts.get(REGISTRY, \"RS384\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 229,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm RS512 = Jwts.get(REGISTRY, \"RS512\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 240,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm PS256 = Jwts.get(REGISTRY, \"PS256\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 251,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm PS384 = Jwts.get(REGISTRY, \"PS384\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/Jwts.java",
+            "line": 262,
+            "offset": 75,
+            "additionalContext": "public static final SignatureAlgorithm PS512 = Jwts.get(REGISTRY, \"PS512\");"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 65,
+            "offset": 11,
+            "additionalContext": "RS256(\"RS256\", \"RSASSA-PKCS-v1_5 using SHA-256\", \"RSA\", \"SHA256withRSA\", true, 256, 2048),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 70,
+            "offset": 11,
+            "additionalContext": "RS384(\"RS384\", \"RSASSA-PKCS-v1_5 using SHA-384\", \"RSA\", \"SHA384withRSA\", true, 384, 2048),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 75,
+            "offset": 11,
+            "additionalContext": "RS512(\"RS512\", \"RSASSA-PKCS-v1_5 using SHA-512\", \"RSA\", \"SHA512withRSA\", true, 512, 2048),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 97,
+            "offset": 11,
+            "additionalContext": "PS256(\"PS256\", \"RSASSA-PSS using SHA-256 and MGF1 with SHA-256\", \"RSA\", \"RSASSA-PSS\", false, 256, 2048),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 104,
+            "offset": 11,
+            "additionalContext": "PS384(\"PS384\", \"RSASSA-PSS using SHA-384 and MGF1 with SHA-384\", \"RSA\", \"RSASSA-PSS\", false, 384, 2048),"
+          },
+          {
+            "location": "api/src/main/java/io/jsonwebtoken/SignatureAlgorithm.java",
+            "line": 111,
+            "offset": 11,
+            "additionalContext": "PS512(\"PS512\", \"RSASSA-PSS using SHA-512 and MGF1 with SHA-512\", \"RSA\", \"RSASSA-PSS\", false, 512, 2048);"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 38,
+            "offset": 20,
+            "additionalContext": "RsaSignatureAlgorithm.RS256,"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 39,
+            "offset": 20,
+            "additionalContext": "RsaSignatureAlgorithm.RS384,"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 40,
+            "offset": 20,
+            "additionalContext": "RsaSignatureAlgorithm.RS512,"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 41,
+            "offset": 20,
+            "additionalContext": "RsaSignatureAlgorithm.PS256,"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 42,
+            "offset": 20,
+            "additionalContext": "RsaSignatureAlgorithm.PS384,"
+          },
+          {
+            "location": "impl/src/main/java/io/jsonwebtoken/impl/security/StandardSecureDigestAlgorithms.java",
+            "line": 43,
+            "offset": 20,
+            "additionalContext": "RsaSignatureAlgorithm.PS512,"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:177e55bdb4a180b7",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": null,
+          "subjectPublicKeyRef": "Ed25519-256",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/Ed25519.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:28e9d490b24ce3e9",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": null,
+          "subjectPublicKeyRef": "Ed25519-448",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/Ed448.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:592f33eebef147fb",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "ECDSA-256",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/ES256.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:83f55ae822236e6f",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "ECDSA-384",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/ES384.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:a271cf68119b7026",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "ECDSA-521",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/ES512.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:b49b16a64b1b70e7",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "RSA-2048",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/PS256.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:1aa145c6ebda46a1",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-384",
+          "subjectPublicKeyRef": "RSA-3072",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/PS384.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:3709bdd41964c559",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-512",
+          "subjectPublicKeyRef": "RSA-4096",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/PS512.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:37672cda62eb8dff",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "RSA-2048",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/RS256.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:be150f3c0d521ab3",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "RSA-3072",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/RS384.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:df4956c5e2f75ff9",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "RSA-4096",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/RS512.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:b1c318ceab03456e",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": null,
+          "subjectPublicKeyRef": "None-None",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "unknown"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/X25519.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:5a743c25be102ee9",
+      "name": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "issuerName": "OU=jjwt,O=jsonwebtoken.io,L=San Francisco,ST=California,C=US",
+          "notValidBefore": "2023-08-29",
+          "notValidAfter": "3023-09-06",
+          "signatureAlgorithmRef": null,
+          "subjectPublicKeyRef": "None-None",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "unknown"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": ""
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "364152"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 365250 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/src/test/resources/io/jsonwebtoken/impl/security/X448.crt.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:9c81e74b49a3e14f",
+      "name": "io.jsonwebtoken:jjwt-api",
+      "version": "${project.version}",
+      "description": "Java JWT API",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@${project.version}",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "pom.xml",
+            "line": 163
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:65daa75a4a8b5005",
+      "name": "io.jsonwebtoken:jjwt-impl",
+      "version": "${project.version}",
+      "description": "Java JWT implementation",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-impl@${project.version}",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "pom.xml",
+            "line": 168
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:6b78e9a813e7c188",
+      "name": "io.jsonwebtoken:jjwt-api",
+      "version": "0.14.0-SNAPSHOT",
+      "description": "Java JWT API",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@0.14.0-SNAPSHOT",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "bom/pom.xml",
+            "line": 45
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:e3a1d541702193d2",
+      "name": "io.jsonwebtoken:jjwt-impl",
+      "version": "0.14.0-SNAPSHOT",
+      "description": "Java JWT implementation",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-impl@0.14.0-SNAPSHOT",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "bom/pom.xml",
+            "line": 50
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:6fcd7ff59951ad13",
+      "name": "io.jsonwebtoken:jjwt-api",
+      "version": "unspecified",
+      "description": "Java JWT API",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@unknown",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "extensions/gson/pom.xml",
+            "line": 37
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:6fcd7ff59951ad13",
+      "name": "io.jsonwebtoken:jjwt-api",
+      "version": "unspecified",
+      "description": "Java JWT API",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@unknown",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "extensions/jackson/pom.xml",
+            "line": 37
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:6fcd7ff59951ad13",
+      "name": "io.jsonwebtoken:jjwt-api",
+      "version": "unspecified",
+      "description": "Java JWT API",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@unknown",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "extensions/orgjson/pom.xml",
+            "line": 37
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:6fcd7ff59951ad13",
+      "name": "io.jsonwebtoken:jjwt-api",
+      "version": "unspecified",
+      "description": "Java JWT API",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@unknown",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "impl/pom.xml",
+            "line": 39
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:6fcd7ff59951ad13",
+      "name": "io.jsonwebtoken:jjwt-api",
+      "version": "unspecified",
+      "description": "Java JWT API",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-api@unknown",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "tdjar/pom.xml",
+            "line": 40
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:648aadc46d561542",
+      "name": "io.jsonwebtoken:jjwt-impl",
+      "version": "unspecified",
+      "description": "Java JWT implementation",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-impl@unknown",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "tdjar/pom.xml",
+            "line": 44
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+# ECDAT service manifest -- Nivesh Financial Services estate
+# Filled in once by the asset owner. Everything ECDAT says about business
+# criticality traces back to a line in this file, or is explicitly labelled
+# as a heuristic guess.
+
+organisation: Nivesh Financial Services
+threat_horizon_years: 15        # Z -- when we assume a CRQC may exist
+horizon_basis: "Board risk appetite, anchored to NIST IR 8547 (deprecate classical PKC by 2030, disallow by 2035)"
+
+services:
+  - name: payment-api
+    description: "Settlement instruction signing and clearing-gateway integration"
+    path_patterns:
+      - "services/payment-api/**"
+    data_classification: financial
+    business_function: payment-processing
+    exposure: internet-facing
+    data_lifetime_years: 7          # X -- PMLA transaction record retention
+    migration_time_years: 3         # Y -- HSM + counterparty coordination
+    migration_constraints:
+      - "Settlement keys live in a FIPS 140-2 Level 3 HSM with no PQC firmware path yet"
+      - "NPCI counterparty must support the same suite before cutover"
+    owner: "payments-platform@nivesh.in"
+
+  - name: kyc-service
+    description: "Aadhaar-linked KYC vault and consent artefact store"
+    path_patterns:
+      - "services/kyc-service/**"
+    data_classification: sensitive-pii
+    business_function: authentication
+    exposure: internet-facing
+    data_lifetime_years: 8          # PMLA: 8 years past account closure
+    migration_time_years: 2
+    migration_constraints:
+      - "UIDAI auth endpoint dictates the key-exchange suite; we cannot move unilaterally"
+    owner: "identity@nivesh.in"
+
+  - name: treasury-archive
+    description: "Sealed sovereign debt and inter-ministry settlement records"
+    path_patterns:
+      - "services/treasury-archive/**"
+    data_classification: sensitive-pii
+    business_function: records-archival
+    exposure: offline
+    data_lifetime_years: 25         # statutory retention; some classes permanent
+    migration_time_years: 4         # re-sealing the existing archive is the long pole
+    migration_constraints:
+      - "Existing sealed records must stay verifiable -- re-sealing 25 years of archive is the long pole"
+      - "Air-gapped; every change ships by physical media"
+    owner: "treasury-ops@nivesh.in"
+
+  - name: citizen-portal
+    description: "Public citizen login, statements and grievance filing"
+    path_patterns:
+      - "services/citizen-portal/**"
+    data_classification: internal
+    business_function: authentication
+    exposure: internet-facing
+    data_lifetime_years: 2          # session and download-link lifetime only
+    migration_time_years: 1
+    migration_constraints:
+      - "Browser and mobile-app client support gates any signature change"
+    owner: "portal-team@nivesh.in"
+
+  - name: admin-console
+    description: "Internal operations console, reachable from the ops jump host only"
+    path_patterns:
+      - "tools/admin-console/**"
+    data_classification: internal
+    business_function: internal-tooling
+    exposure: internal
+    data_lifetime_years: 1
+    migration_time_years: 1
+    owner: "platform@nivesh.in"
+
+  - name: test-fixtures
+    description: "CI-only throwaway keys and fixtures"
+    path_patterns:
+      - "tests/**"
+      - "**/fixtures/**"
+    data_classification: public
+    business_function: test
+    exposure: offline
+    data_lifetime_years: 0
+    migration_time_years: 0
+    owner: null
+
+  - name: shared-tls-infrastructure
+    description: "TLS termination profiles and the internal PKI trust store"
+    path_patterns:
+      - "deploy/**"
+    data_classification: financial
+    business_function: payment-processing
+    exposure: internet-facing
+    data_lifetime_years: 7
+    migration_time_years: 3
+    owner: "netsec@nivesh.in"

@@ -1,0 +1,1391 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:b4a6de2b-0000-4000-8000-417acb416f09",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-31T00:00:00+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "ECDAT",
+          "version": "0.9.0-prototype",
+          "description": "Enterprise Cryptographic Discovery & Analysis Tool"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "bom-ref": "crypto:app:417acb416f092a3f",
+      "name": "Nivesh Financial Services",
+      "description": "A six-service financial estate with a completed ECDAT service manifest. Every criticality label here traces to a declared manifest entry."
+    },
+    "properties": [
+      {
+        "name": "ecdat:ruleset_version",
+        "value": "0.9.0-prototype"
+      },
+      {
+        "name": "ecdat:rules_evaluated",
+        "value": "56"
+      },
+      {
+        "name": "ecdat:source_files_scanned",
+        "value": "10"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:dbc95c35b3cceafa",
+      "name": "3DES",
+      "description": "112-bit effective strength and a 64-bit block (Sweet32). Deprecated by NIST after 2023.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "block-cipher",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "encrypt"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "classically-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "2"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "112-bit effective strength and a 64-bit block (Sweet32). Deprecated by NIST after 2023."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "AES-256-GCM"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/LegacyMerchantAdapter.java",
+            "line": 31,
+            "offset": 20,
+            "additionalContext": "Cipher c = Cipher.getInstance(\"DESede/CBC/PKCS5Padding\");"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:41f215a6d36c7782",
+      "name": "AES",
+      "description": "Key size is not resolvable from this call site. AES-256 is quantum-safe; AES-128 is Grover-reduced.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "block-cipher",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "encrypt"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "grover-reduced"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "3"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Key size is not resolvable from this call site. AES-256 is quantum-safe; AES-128 is Grover-reduced."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "Confirm 256-bit keys for long-lived data"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 47,
+            "offset": 21,
+            "additionalContext": "cipher = Cipher(algorithms.AES(record_key), modes.GCM(nonce))"
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/PaymentSigner.java",
+            "line": 54,
+            "offset": 25,
+            "additionalContext": "Cipher cipher = Cipher.getInstance(\"AES/GCM/NoPadding\");"
+          },
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 37,
+            "offset": 21,
+            "additionalContext": "cipher = Cipher(algorithms.AES(volume_key), modes.CBC(iv))"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:dbf6d3664211726b",
+      "name": "AES-128",
+      "description": "Grover halves the effective search space to ~2^64 operations. Still infeasible in practice, but NIST advises AES-256 where confidentiality must outlive the CRQC.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "block-cipher",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "encrypt"
+          ],
+          "nistQuantumSecurityLevel": 1
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "grover-reduced"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "2"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Grover halves the effective search space to ~2^64 operations. Still infeasible in practice, but NIST advises AES-256 where confidentiality must outlive the CRQC."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "AES-256 for long-lived data"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:96053bcf3f86a5b8",
+      "name": "AES-256",
+      "description": "~128-bit effective strength even under Grover. Approved for the post-quantum era.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "block-cipher",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "encrypt"
+          ],
+          "nistQuantumSecurityLevel": 5
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "3"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "~128-bit effective strength even under Grover. Approved for the post-quantum era."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:735ffe35e5c4accf",
+      "name": "CSPRNG",
+      "description": "Cryptographically secure randomness source.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "drbg",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "generate"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "3"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Cryptographically secure randomness source."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/citizen-portal/src/main/java/in/nivesh/portal/SessionTokens.java",
+            "line": 45,
+            "offset": 9,
+            "additionalContext": "new SecureRandom().nextBytes(b);"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 46,
+            "offset": 13,
+            "additionalContext": "nonce = os.urandom(12)"
+          },
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 36,
+            "offset": 10,
+            "additionalContext": "iv = os.urandom(16)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:6f552311b1ec07ab",
+      "name": "DH",
+      "description": "Finite-field discrete log falls to Shor. Recorded handshakes are retroactively readable.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "keygen"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "1"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Finite-field discrete log falls to Shor. Recorded handshakes are retroactively readable."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-KEM (FIPS 203)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:3dbf83ff89b0bb28",
+      "name": "DSA",
+      "description": "Shor-broken, and already withdrawn for new signatures by FIPS 186-5.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-gen",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "keygen"
+          ],
+          "parameterSetIdentifier": "2048"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "1"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Shor-broken, and already withdrawn for new signatures by FIPS 186-5."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-DSA (FIPS 204)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 31,
+            "offset": 12,
+            "additionalContext": "return dsa.generate_private_key(key_size=2048)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:d9946cf9424837cc",
+      "name": "ECDH",
+      "description": "Shor recovers the shared secret. Recorded traffic is decryptable retroactively.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "key-agree",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "keygen"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "9"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Shor recovers the shared secret. Recorded traffic is decryptable retroactively."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-KEM (FIPS 203), hybrid X25519MLKEM768 during transition"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 11,
+            "offset": 1,
+            "additionalContext": "ssl_ecdh_curve secp384r1:prime256v1;"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 6,
+            "offset": 1,
+            "additionalContext": "Groups = X25519:P-256:P-384"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 61,
+            "offset": 18,
+            "additionalContext": "shared = ours.exchange(ec.ECDH(), peer_public_key)"
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/PaymentSigner.java",
+            "line": 46,
+            "offset": 27,
+            "additionalContext": "KeyAgreement ka = KeyAgreement.getInstance(\"ECDH\");"
+          },
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 45,
+            "offset": 16,
+            "additionalContext": "return ours.exchange(ec.ECDH(), peer_public_key)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:2ff063a21bc0ed86",
+      "name": "ECDSA",
+      "description": "Shor's algorithm solves the elliptic-curve discrete log, recovering the signing key.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "keygen",
+            "sign"
+          ],
+          "parameterSetIdentifier": "384"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "6"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Shor's algorithm solves the elliptic-curve discrete log, recovering the signing key."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-DSA (FIPS 204)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "services/citizen-portal/src/main/java/in/nivesh/portal/SessionTokens.java",
+            "line": 30,
+            "offset": 32,
+            "additionalContext": "KeyPairGenerator kpg = KeyPairGenerator.getInstance(\"EC\");"
+          },
+          {
+            "location": "services/citizen-portal/src/main/java/in/nivesh/portal/SessionTokens.java",
+            "line": 18,
+            "offset": 38,
+            "additionalContext": ".signWith(portalKey, SignatureAlgorithm.ES256)"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 60,
+            "offset": 12,
+            "additionalContext": "ours = ec.generate_private_key(ec.SECP256R1())"
+          },
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 44,
+            "offset": 12,
+            "additionalContext": "ours = ec.generate_private_key(ec.SECP384R1())"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:7ad4e9a1561fd985",
+      "name": "Ed25519",
+      "description": "Edwards-curve signature. Shor applies to the discrete log exactly as for ECDSA.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "sign"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "1"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Edwards-curve signature. Shor applies to the discrete log exactly as for ECDSA."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-DSA (FIPS 204)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "tools/admin-console/ops_tools.py",
+            "line": 16,
+            "offset": 12,
+            "additionalContext": "return ed25519.Ed25519PrivateKey.generate()"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:380eb30f2d5ab1cd",
+      "name": "HMAC",
+      "description": "Security rests on the key, not on collision resistance. No practical quantum advantage.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "mac",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "tag"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "2"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Security rests on the key, not on collision resistance. No practical quantum advantage."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/citizen-portal/src/main/java/in/nivesh/portal/SessionTokens.java",
+            "line": 24,
+            "offset": 19,
+            "additionalContext": "Mac mac = Mac.getInstance(\"HmacSHA256\");"
+          },
+          {
+            "location": "tools/admin-console/ops_tools.py",
+            "line": 25,
+            "offset": 16,
+            "additionalContext": "expected = hmac.new(secret, body, hashlib.sha256).hexdigest()"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:b773bed04a48de20",
+      "name": "MD5",
+      "description": "Practical collisions since 2004. Unsafe for any security purpose today; quantum is irrelevant.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "digest"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "classically-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "3"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Practical collisions since 2004. Unsafe for any security purpose today; quantum is irrelevant."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "SHA-256 or SHA-3"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/LegacyMerchantAdapter.java",
+            "line": 16,
+            "offset": 28,
+            "additionalContext": "MessageDigest md = MessageDigest.getInstance(\"MD5\");"
+          },
+          {
+            "location": "tests/fixtures/sample_keys_test.py",
+            "line": 14,
+            "offset": 12,
+            "additionalContext": "return hashlib.md5(x).hexdigest()"
+          },
+          {
+            "location": "tools/admin-console/ops_tools.py",
+            "line": 21,
+            "offset": 12,
+            "additionalContext": "return hashlib.md5(blob).hexdigest()"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:5cf290f05b8759af",
+      "name": "PBKDF2",
+      "description": "Grover offers at most a square-root speedup against the password space; iteration count is the real control.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "kdf",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "keyderive"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "1"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Grover offers at most a square-root speedup against the password space; iteration count is the real control."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 54,
+            "offset": 11,
+            "additionalContext": "kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=600_000)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:56d91d770f6fd64e",
+      "name": "RSA",
+      "description": "Shor's algorithm factors the modulus, recovering the private key from the public key.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "signature",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "encrypt",
+            "keygen",
+            "sign"
+          ],
+          "parameterSetIdentifier": "3072"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "14"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Shor's algorithm factors the modulus, recovering the private key from the public key."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "ML-KEM (key transport) / ML-DSA (signatures)"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 20,
+            "offset": 12,
+            "additionalContext": "return rsa.generate_private_key(public_exponent=65537, key_size=2048)"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 27,
+            "offset": 9,
+            "additionalContext": "padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=32),"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 36,
+            "offset": 9,
+            "additionalContext": "padding.OAEP("
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/LegacyMerchantAdapter.java",
+            "line": 22,
+            "offset": 25,
+            "additionalContext": "Signature sig = Signature.getInstance(\"SHA1withRSA\");"
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/PaymentSigner.java",
+            "line": 31,
+            "offset": 25,
+            "additionalContext": "Signature sig = Signature.getInstance(\"SHA256withRSA\");"
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/PaymentSigner.java",
+            "line": 39,
+            "offset": 25,
+            "additionalContext": "Cipher cipher = Cipher.getInstance(\"RSA/ECB/OAEPWithSHA-256AndMGF1Padding\");"
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/PaymentSigner.java",
+            "line": 24,
+            "offset": 32,
+            "additionalContext": "KeyPairGenerator kpg = KeyPairGenerator.getInstance(\"RSA\");"
+          },
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 21,
+            "offset": 12,
+            "additionalContext": "return rsa.generate_private_key(public_exponent=65537, key_size=3072)"
+          },
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 26,
+            "offset": 43,
+            "additionalContext": "return sealing_key.sign(record_bytes, padding.PKCS1v15(), hashes.SHA256())"
+          },
+          {
+            "location": "tests/fixtures/sample_keys_test.py",
+            "line": 10,
+            "offset": 12,
+            "additionalContext": "return rsa.generate_private_key(public_exponent=65537, key_size=1024)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:c571b86549e49bf2",
+      "name": "SHA-1",
+      "description": "Chosen-prefix collisions demonstrated (SHAmbles, 2020). Disallowed by NIST after 2030.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "digest"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "classically-broken"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "2"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Chosen-prefix collisions demonstrated (SHAmbles, 2020). Disallowed by NIST after 2030."
+        },
+        {
+          "name": "ecdat:recommended_replacement",
+          "value": "SHA-256 or SHA-3"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 72,
+            "offset": 12,
+            "additionalContext": "return hashlib.sha1(aadhaar_number.encode()).hexdigest()"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:45792d6be6c4f44f",
+      "name": "SHA-256",
+      "description": "Grover reduces preimage resistance to ~2^128, which remains infeasible. Collision resistance is unaffected in practice.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "digest"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "11"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Grover reduces preimage resistance to ~2^128, which remains infeasible. Collision resistance is unaffected in practice."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          },
+          {
+            "location": "services/citizen-portal/src/main/java/in/nivesh/portal/SessionTokens.java",
+            "line": 40,
+            "offset": 16,
+            "additionalContext": "return MessageDigest.getInstance(\"SHA-256\").digest(body);"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 27,
+            "offset": 38,
+            "additionalContext": "padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=32),"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 28,
+            "offset": 9,
+            "additionalContext": "hashes.SHA256(),"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 37,
+            "offset": 40,
+            "additionalContext": "mgf=padding.MGF1(algorithm=hashes.SHA256()),"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 38,
+            "offset": 23,
+            "additionalContext": "algorithm=hashes.SHA256(),"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 54,
+            "offset": 32,
+            "additionalContext": "kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=600_000)"
+          },
+          {
+            "location": "services/kyc-service/app/identity_vault.py",
+            "line": 67,
+            "offset": 12,
+            "additionalContext": "return hashlib.sha256(aadhaar_number.encode()).hexdigest()"
+          },
+          {
+            "location": "services/payment-api/src/main/java/in/nivesh/payment/PaymentSigner.java",
+            "line": 61,
+            "offset": 28,
+            "additionalContext": "MessageDigest md = MessageDigest.getInstance(\"SHA-256\");"
+          },
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 26,
+            "offset": 63,
+            "additionalContext": "return sealing_key.sign(record_bytes, padding.PKCS1v15(), hashes.SHA256())"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:5eaccc460d26c3db",
+      "name": "SHA-384",
+      "description": "Approved at all security levels.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "digest"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "3"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Approved at all security levels."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/citizen-portal.nginx.conf",
+            "line": 10,
+            "offset": 1,
+            "additionalContext": "ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;"
+          },
+          {
+            "location": "deploy/tls/payment-gateway.conf",
+            "line": 5,
+            "offset": 1,
+            "additionalContext": "CipherSuites = TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:alg:b8ad6acdebce2073",
+      "name": "SHA-512",
+      "description": "Approved at all security levels.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "digest"
+          ]
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "quantum-safe"
+        },
+        {
+          "name": "ecdat:occurrences",
+          "value": "1"
+        },
+        {
+          "name": "ecdat:quantum_rationale",
+          "value": "Approved at all security levels."
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/treasury-archive/archive/sealed_records.py",
+            "line": 49,
+            "offset": 26,
+            "additionalContext": "digest = hashes.Hash(hashes.SHA512())"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:f7c4c6d2176bedc0",
+      "name": "portal.nivesh.gov.in",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "portal.nivesh.gov.in",
+          "issuerName": "Nivesh Internal Issuing CA G2",
+          "notValidBefore": "2026-01-15",
+          "notValidAfter": "2027-02-16",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "RSA-2048",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": "digital_signature,key_encipherment"
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "169"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/certs/citizen-portal.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:482ae8fe690f5120",
+      "name": "acquirer-legacy.nivesh.internal",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "acquirer-legacy.nivesh.internal",
+          "issuerName": "Nivesh Internal Issuing CA G2",
+          "notValidBefore": "2026-01-15",
+          "notValidAfter": "2027-01-15",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "RSA-1024",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": "digital_signature,key_encipherment"
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "137"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "RSA-1024 is below the NIST SP 800-57 classical minimum of 2048 bits"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/certs/legacy-acquirer.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:0e5742704368c536",
+      "name": "settlement.nivesh.gov.in",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "settlement.nivesh.gov.in",
+          "issuerName": "Nivesh Internal Issuing CA G2",
+          "notValidBefore": "2026-01-15",
+          "notValidAfter": "2028-01-15",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "ECDSA-256",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": "digital_signature,key_agreement"
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "502"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/certs/payment-gateway.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto:cert:bb40007e67813c44",
+      "name": "Treasury Record Sealing Authority",
+      "cryptoProperties": {
+        "assetType": "certificate",
+        "certificateProperties": {
+          "subjectName": "Treasury Record Sealing Authority",
+          "issuerName": "Nivesh Internal Issuing CA G2",
+          "notValidBefore": "2026-01-15",
+          "notValidAfter": "2036-01-13",
+          "signatureAlgorithmRef": "SHA-256",
+          "subjectPublicKeyRef": "RSA-3072",
+          "certificateFormat": "X.509",
+          "certificateExtension": "pem"
+        }
+      },
+      "properties": [
+        {
+          "name": "ecdat:quantum_status",
+          "value": "shor-broken"
+        },
+        {
+          "name": "ecdat:key_usage",
+          "value": "digital_signature,content_commitment"
+        },
+        {
+          "name": "ecdat:days_remaining",
+          "value": "3422"
+        },
+        {
+          "name": "ecdat:issue",
+          "value": "Validity window of 3650 days exceeds the 398-day CA/Browser Forum maximum for TLS"
+        }
+      ],
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "deploy/certs/treasury-sealing.pem"
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:0f058574e20b5b6d",
+      "name": "cryptography",
+      "version": "42.0.5",
+      "description": "Primary Python crypto provider (RSA, EC, AES, X.509)",
+      "purl": "pkg:pypi/cryptography@42.0.5",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/kyc-service/requirements.txt",
+            "line": 1
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:a26d58650c06051b",
+      "name": "pyjwt",
+      "version": "2.8.0",
+      "description": "JWT signing and verification (RS256/ES256/HS256)",
+      "purl": "pkg:pypi/pyjwt@2.8.0",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/kyc-service/requirements.txt",
+            "line": 2
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:7f9acfd3265f0b41",
+      "name": "pycryptodome",
+      "version": "3.20.0",
+      "description": "Alternative Python crypto provider",
+      "purl": "pkg:pypi/pycryptodome@3.20.0",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/kyc-service/requirements.txt",
+            "line": 3
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:ba14cc1eaa1d040e",
+      "name": "paramiko",
+      "version": "3.4.0",
+      "description": "SSH implementation; RSA/ECDSA/Ed25519 host and user keys",
+      "purl": "pkg:pypi/paramiko@3.4.0",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/kyc-service/requirements.txt",
+            "line": 5
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:fcc217e3802aea9e",
+      "name": "org.bouncycastle:bcprov-jdk18on",
+      "version": "1.77",
+      "description": "Bouncy Castle JCE provider",
+      "purl": "pkg:maven/org.bouncycastle/bcprov-jdk18on@1.77",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/payment-api/pom.xml",
+            "line": 8
+          }
+        ]
+      }
+    },
+    {
+      "type": "library",
+      "bom-ref": "crypto:lib:4bc90fa73e872403",
+      "name": "io.jsonwebtoken:jjwt-impl",
+      "version": "0.11.5",
+      "description": "Java JWT implementation",
+      "purl": "pkg:maven/io.jsonwebtoken/jjwt-impl@0.11.5",
+      "evidence": {
+        "occurrences": [
+          {
+            "location": "services/payment-api/pom.xml",
+            "line": 13
+          }
+        ]
+      }
+    }
+  ]
+}
