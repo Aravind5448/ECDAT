@@ -29,8 +29,12 @@ function q(id) { return document.getElementById(id); }
 function titleCase(s) { return String(s || "").replace(/[-_]/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); }); }
 
 var RISK_ORDER = ["critical", "high", "medium", "low", "informational"];
-var RISK_COLOR = { critical: "#ff4d6d", high: "#ff9142", medium: "#ffd056", low: "#56a8f5", informational: "#64748b" };
-var Q_COLOR = { "classically-broken": "#ff2d55", "shor-broken": "#ff4d6d", "grover-reduced": "#ffd056", "quantum-safe": "#2fd9a4", "unknown": "#64748b" };
+/* Chart fills are a single accessible ramp shared by every visualisation and kept
+   in step with the badge palette in styles.css. Each carries white text at >=4.5:1
+   so a segment label is legible whatever the value. */
+var RISK_COLOR = { critical: "#b42342", high: "#a85c07", medium: "#836200", low: "#1769aa", informational: "#6b7a8d" };
+var Q_COLOR = { "classically-broken": "#8c1330", "shor-broken": "#c33a56", "grover-reduced": "#a07800", "quantum-safe": "#0b7a56", "unknown": "#6b7a8d" };
+var CHART_TRACK = "#e6ecf3";
 var Q_LABEL = {
   "classically-broken": "Broken today",
   "shor-broken": "Broken by Shor",
@@ -64,7 +68,8 @@ var S = {
   filters: { search: "", risk: "", algorithm: "", fn: "", conf: "", quantum: "" },
   sort: { key: "risk", dir: -1 },
   mosca: { z: null, over: {} },
-  selected: null
+  selected: null,
+  demo: null
 };
 
 function repos() { return S.repo === "all" ? REPO_IDS.map(function (r) { return D.repos[r]; }) : [D.repos[S.repo]]; }
@@ -111,10 +116,11 @@ function donut(counts, order, colors, centerLabel, centerValue) {
     off += len;
     return s;
   }).join("");
-  return '<svg viewBox="0 0 140 140" style="width:140px;height:140px;flex:0 0 140px">' +
-    '<circle cx="70" cy="70" r="' + r + '" fill="none" stroke="#1a2331" stroke-width="17"/>' + arcs +
-    '<text x="70" y="65" text-anchor="middle" fill="#e8edf5" font-family="ui-monospace,monospace" font-size="25" font-weight="600">' + esc(centerValue) + "</text>" +
-    '<text x="70" y="83" text-anchor="middle" fill="#6b7c94" font-size="9.5" font-weight="600" letter-spacing="1">' + esc(centerLabel) + "</text></svg>";
+  return '<svg viewBox="0 0 140 140" style="width:140px;height:140px;flex:0 0 140px" role="img" aria-label="' +
+    esc(centerLabel + " " + centerValue) + '">' +
+    '<circle cx="70" cy="70" r="' + r + '" fill="none" stroke="' + CHART_TRACK + '" stroke-width="17"/>' + arcs +
+    '<text x="70" y="65" text-anchor="middle" fill="#172033" font-family="ui-monospace,monospace" font-size="25" font-weight="700">' + esc(centerValue) + "</text>" +
+    '<text x="70" y="83" text-anchor="middle" fill="#66758a" font-size="9.5" font-weight="700" letter-spacing="1">' + esc(centerLabel) + "</text></svg>";
 }
 
 function legendList(counts, order, colors, labels) {
@@ -231,7 +237,7 @@ function viewOverview() {
       return '<tr data-fid="' + esc(f.id) + '" data-repo="' + esc(f.repo) + '">' +
         "<td>" + riskBadge(f.risk.bucket) + ' <span class="mono dim">' + f.risk.score.toFixed(1) + "</span></td>" +
         '<td>' + qDot(f.quantum) + ' <span class="mono">' + esc(f.label) + "</span></td>" +
-        '<td class="dim">' + esc(titleCase(f.function)) + "</td>" +
+        '<td class="dim purpose">' + esc(titleCase(f.function)) + "</td>" +
         "<td>" + (f.criticality.service ? '<span class="mono" style="font-size:11.5px">' + esc(f.criticality.service) + "</span>" : '<span class="dim">—</span>') + "</td>" +
         "<td>" + pathCellShort(f) + "</td></tr>";
     }).join("") + "</tbody></table></div></div>";
@@ -352,7 +358,7 @@ function viewInventory() {
       "<td>" + riskBadge(f.risk.bucket) + ' <span class="mono dim">' + f.risk.score.toFixed(1) + "</span></td>" +
       '<td class="mono">' + esc(f.label) + "</td>" +
       "<td>" + qDot(f.quantum) + "</td>" +
-      '<td class="dim">' + esc(titleCase(f.function)) + "</td>" +
+      '<td class="dim purpose">' + esc(titleCase(f.function)) + "</td>" +
       '<td><span class="badge b-' + critTone(f.criticality.bucket) + '">' + esc(f.criticality.bucket) + '</span> <span class="mono dim">' + f.criticality.score + "</span></td>" +
       "<td>" + confBadge(f.criticality.confidence) + "</td>" +
       "<td>" + pathCell(f) + "</td>" +
@@ -477,7 +483,7 @@ function viewCriticality() {
       var v = row[a] || 0; tot += v;
       if (!v) return '<td style="text-align:center;color:var(--ink-4)">·</td>';
       var alpha = 0.16 + (v / maxCell) * 0.6;
-      return '<td style="text-align:center;background:rgba(255,77,109,' + alpha.toFixed(2) + ');font-family:var(--mono);font-weight:700">' + v + "</td>";
+      return '<td style="text-align:center;background:rgba(180,35,66,' + alpha.toFixed(2) + ');font-family:var(--mono);font-weight:700">' + v + "</td>";
     }).join("");
     return '<tr style="cursor:default"><td class="mono">' + esc(s) + "</td>" + cells + '<td class="num">' + tot + "</td></tr>";
   }).join("");
@@ -514,9 +520,9 @@ function viewMosca() {
     '<div class="formula" style="font-size:14px;text-align:center;padding:16px">' +
     'if &nbsp;<b>X</b> <span class="op">+</span> <b>Y</b> &nbsp;<span class="op">&gt;</span>&nbsp; <b>Z</b>&nbsp; then you are <span class="res">already too late</span></div>' +
     '<div class="grid g3" style="margin-top:14px">' +
-    moscaLeg("X", "Data lifetime", "How long this data must stay confidential — or this signature must stay unforgeable.", "#ff9142") +
-    moscaLeg("Y", "Migration time", "How long replacing the cryptography realistically takes, including counterparties.", "#56a8f5") +
-    moscaLeg("Z", "Threat horizon", "How long until a cryptographically-relevant quantum computer exists. An assumption you set.", "#2fd9a4") +
+    moscaLeg("X", "Data lifetime", "How long this data must stay confidential — or this signature must stay unforgeable.", "#a85c07") +
+    moscaLeg("Y", "Migration time", "How long replacing the cryptography realistically takes, including counterparties.", "#1769aa") +
+    moscaLeg("Z", "Threat horizon", "How long until a cryptographically-relevant quantum computer exists. An assumption you set.", "#0b7a56") +
     "</div>" +
     '<div class="note" style="margin-top:14px"><b>Why this is a slider and not a prediction.</b> Nobody knows when a CRQC arrives. ' +
     "ECDAT refuses to hide that behind a confident-looking number. Z is an assumption the operator owns, it is visible on screen, " +
@@ -560,8 +566,11 @@ function moscaLeg(sym, name, desc, color) {
 }
 
 function renderMoscaList() {
+  /* render() calls this unconditionally after painting the Mosca view, so it has to
+     tolerate the states viewMosca() bails out of -- "All targets" has no repo record
+     at all, and an un-manifested target has no X or Y to plot. */
   var r = R();
-  if (!r.manifest_present) return;
+  if (!r || !r.manifest_present) return;
   var Z = moscaZ();
   var svcs = Object.keys(r.services).map(function (k) { return r.services[k]; });
 
@@ -610,8 +619,8 @@ function renderMoscaList() {
       '<div style="font-size:11.5px;color:var(--ink-3);margin-bottom:10px">' + esc(s.description) + "</div>" +
 
       '<div class="mosca-timeline">' +
-      '<div class="mosca-seg" style="left:0;width:' + xw + '%;top:14px;background:#ff9142">' + (xw > 12 ? "X = " + s._x + "y" : "") + "</div>" +
-      '<div class="mosca-seg" style="left:' + xw + "%;width:" + yw + '%;top:14px;background:#56a8f5">' + (yw > 12 ? "Y = " + s._y + "y" : "") + "</div>" +
+      '<div class="mosca-seg" style="left:0;width:' + xw + '%;top:14px;background:#a85c07">' + (xw > 12 ? "X = " + s._x + "y" : "") + "</div>" +
+      '<div class="mosca-seg" style="left:' + xw + "%;width:" + yw + '%;top:14px;background:#1769aa">' + (yw > 12 ? "Y = " + s._y + "y" : "") + "</div>" +
       (s._exposed ? '<div class="mosca-over" style="left:' + overStart + "%;width:" + Math.max(overEnd - overStart, 0.6) + '%;top:14px"></div>' : "") +
       '<div class="mosca-z" style="left:' + zx + '%"><span>Z = ' + Z + "y</span></div>" +
       '<div class="mosca-axis"></div>' +
@@ -658,6 +667,18 @@ function viewPassport() {
   var certRsa = findCert("RSA-2048"), certMl = findCert("ML-DSA-65");
 
   var html = "";
+
+  /* The benchmark is a property of the machine, not of a target, so this screen does
+     not change with the target switch. Say so, rather than letting a jury assume the
+     numbers just re-ran for paramiko. */
+  if (S.repo !== "nivesh-core") {
+    html += '<div class="card"><div class="card-b"><div class="note warn">' +
+      "<b>This screen is machine-scoped, not target-scoped.</b> The measurements below describe this host's " +
+      "cryptography, so they are identical whichever target is selected. The passport record at the foot of the " +
+      "page is written against <b>payment-api</b> in the Nivesh estate, because a passport needs declared migration " +
+      "constraints and only a manifested target has them." +
+      "</div></div></div>";
+  }
 
   html += '<div class="card"><div class="card-b"><div class="note">' +
     "<b>Every number on this page was measured on this machine, minutes ago — not quoted from a datasheet.</b> " +
@@ -1084,11 +1105,12 @@ function hilite(snippet, match) {
   return s.slice(0, i) + '<span class="hl">' + m + "</span>" + s.slice(i + m.length);
 }
 
-window.__closeDrawer = function () {
+window.__closeDrawer = function (quiet) {
+  var wasOpen = q("drawer").classList.contains("open");
   q("drawer").classList.remove("open");
   q("scrim").classList.remove("open");
   S.selected = null;
-  render();
+  if (!quiet && wasOpen) render();
 };
 
 /* ============================================================
@@ -1102,6 +1124,137 @@ function download(name, text) {
   a.download = name;
   document.body.appendChild(a); a.click();
   setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+}
+
+/* ============================================================
+   Guided walkthrough
+
+   A live evaluation is nine minutes long and the operator's hands are on a
+   clicker, not a mouse. The rail below drives the whole demonstration from the
+   arrow keys: each step sets the target, the view and any filter it needs, so
+   the presenter never hunts for a control in front of a jury. Every step is
+   reachable normally too -- this steers the console, it does not replace it.
+   ============================================================ */
+
+var DEMO = [
+  {
+    view: "overview", repo: "all",
+    title: "We scanned real code",
+    say: "3,111 source files from paramiko, JJWT and Django — cloned from upstream, not written by us. " +
+         "Read the exposure bar left to right: “Broken today” is MD5 and SHA-1, exploitable now. " +
+         "A tool that files those under future quantum risk has mis-ranked them."
+  },
+  {
+    view: "inventory", repo: "nivesh-core", risk: "critical", openTop: true,
+    title: "Every number traces to a line of code",
+    say: "The top finding is SHA-1 over an Aadhaar number in the KYC service. " +
+         "The drawer carries the file, line, column, matched text, enclosing function, the rule that fired, " +
+         "and the full arithmetic behind both scores. Nothing here is a black box."
+  },
+  {
+    view: "criticality", repo: "nivesh-core",
+    title: "What does this cryptography protect?",
+    say: "Every commercial PQC scanner stops at technical severity. This is the layer none of them fill. " +
+         "The weights are on screen and live in engine/criticality.py — an auditor can recompute any score by hand."
+  },
+  {
+    view: "criticality", repo: "paramiko",
+    title: "And what happens when nobody declared it",
+    say: "Same screen, upstream repository, no manifest: 0 manifest-confirmed, 17 path-heuristic, 38 unknown. " +
+         "ECDAT degrades honestly and labels every guess as a guess. That contrast is the feature."
+  },
+  {
+    view: "mosca", repo: "nivesh-core",
+    title: "X + Y > Z — who is already late",
+    say: "Drag Z. treasury-archive scores only “high” on criticality — it is offline — yet it is the one service " +
+         "already 14 years past the line, because its records stay sealed for 25 years and re-sealing takes 4. " +
+         "payment-api scores “critical” and still has 5 years of slack. Severity and urgency are different questions."
+  },
+  {
+    view: "passport", repo: "nivesh-core",
+    title: "Measured, not estimated",
+    say: "Every number was measured on this machine during the run, against OpenSSL's native ML-KEM and ML-DSA. " +
+         "ML-DSA-65 signs at 1.3× RSA-2048 — negligible. Its signature is 3,309 bytes against 256. " +
+         "A three-certificate chain overflows TCP's initial congestion window. Speed is not the blocker; size is."
+  },
+  {
+    view: "method", repo: "nivesh-core",
+    title: "What this prototype does not do",
+    say: "Two languages. Static analysis has a ceiling. Nivesh is fictional, its files are real. No live TLS handshake. " +
+         "Stating the limits before the jury asks is the point of the screen."
+  }
+];
+
+function demoApply(i) {
+  var step = DEMO[i];
+  if (!step) return;
+  S.demo = i;
+  window.__closeDrawer(true);
+  S.filters = { search: "", risk: step.risk || "", algorithm: "", fn: "", conf: "", quantum: "" };
+  S.sort = { key: "risk", dir: -1 };
+  S.mosca = { z: null, over: {} };
+  if (S.repo !== step.repo) { S.repo = step.repo; renderRepoSwitch(); }
+  S.view = step.view;
+  if (location.hash !== "#/" + step.view) location.hash = "#/" + step.view;
+  else render();
+  if (step.openTop) {
+    var top = allFindings().slice().sort(function (a, b) { return b.risk.score - a.risk.score; })[0];
+    if (top) openFinding(top.repo, top.id);
+  }
+  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  renderDemoRail();
+}
+
+function demoStart() { demoApply(0); }
+function demoMove(d) {
+  var next = (S.demo == null ? 0 : S.demo + d);
+  if (next < 0 || next >= DEMO.length) return;
+  demoApply(next);
+}
+function demoExit() {
+  S.demo = null;
+  S.filters.risk = "";
+  renderDemoRail();
+  render();
+}
+
+function renderDemoRail() {
+  var rail = q("demo-rail");
+  var btn = q("demo-toggle");
+  var on = S.demo != null;
+  document.body.classList.toggle("demo-on", on);
+  if (btn) {
+    btn.textContent = on ? "Exit walkthrough" : "▶ Guided walkthrough";
+    btn.classList.toggle("on", on);
+  }
+  if (!on) { rail.innerHTML = ""; rail.hidden = true; return; }
+
+  var i = S.demo, step = DEMO[i];
+  rail.hidden = false;
+  rail.innerHTML =
+    '<div class="demo-progress" role="tablist" aria-label="Walkthrough steps">' +
+    DEMO.map(function (st, k) {
+      return '<button role="tab" data-demo-go="' + k + '" class="' + (k === i ? "on" : k < i ? "done" : "") +
+        '" aria-selected="' + (k === i) + '" title="' + esc((k + 1) + " · " + st.title) + '"><span>' + (k + 1) + "</span></button>";
+    }).join("") + "</div>" +
+    '<div class="demo-body">' +
+    '<div class="demo-head"><span class="demo-step">Step ' + (i + 1) + " of " + DEMO.length + "</span>" +
+    "<h4>" + esc(step.title) + "</h4></div>" +
+    "<p>" + esc(step.say) + "</p></div>" +
+    '<div class="demo-actions">' +
+    '<button class="pill" data-demo="-1"' + (i === 0 ? " disabled" : "") + ' aria-label="Previous step">← Back</button>' +
+    '<button class="pill primary" data-demo="1"' + (i === DEMO.length - 1 ? " disabled" : "") + ' aria-label="Next step">Next →</button>' +
+    '<button class="pill ghost" data-demo="exit" aria-label="Exit walkthrough">Esc</button>' +
+    "</div>";
+
+  rail.onclick = function (e) {
+    var b = e.target.closest("button[data-demo], button[data-demo-go]");
+    if (!b) return;
+    var go = b.getAttribute("data-demo-go");
+    if (go != null) return demoApply(+go);
+    var a = b.getAttribute("data-demo");
+    if (a === "exit") demoExit(); else demoMove(+a);
+  };
 }
 
 /* ============================================================
@@ -1131,6 +1284,7 @@ function render() {
   q("page").innerHTML = v.f();
   if (S.view === "mosca") renderMoscaList();
   wire();
+  renderDemoRail();
 }
 
 function renderRepoSwitch() {
@@ -1146,7 +1300,15 @@ function renderRepoSwitch() {
 function wire() {
   /* rows -> drawer */
   Array.prototype.forEach.call(document.querySelectorAll("tr[data-fid]"), function (tr) {
-    tr.onclick = function () { openFinding(tr.getAttribute("data-repo"), tr.getAttribute("data-fid")); };
+    var open = function () { openFinding(tr.getAttribute("data-repo"), tr.getAttribute("data-fid")); };
+    tr.onclick = open;
+    /* the evidence drawer is the core interaction, so it cannot be mouse-only */
+    tr.tabIndex = 0;
+    tr.setAttribute("role", "button");
+    tr.setAttribute("aria-label", "Open evidence for this finding");
+    tr.onkeydown = function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+    };
   });
 
   /* sorting */
@@ -1246,9 +1408,27 @@ q("repo-switch").onclick = function (e) {
   render();
 };
 
-q("scrim").onclick = window.__closeDrawer;
-document.addEventListener("keydown", function (e) { if (e.key === "Escape") window.__closeDrawer(); });
+q("scrim").onclick = function () { window.__closeDrawer(); };
+
+document.addEventListener("keydown", function (e) {
+  var drawerOpen = q("drawer").classList.contains("open");
+  if (e.key === "Escape") {
+    if (drawerOpen) window.__closeDrawer();
+    else if (S.demo != null) demoExit();
+    return;
+  }
+  if (S.demo == null) return;
+  /* never steal a key the operator is typing into a control */
+  var t = e.target, tag = t && t.tagName;
+  if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || (t && t.isContentEditable)) return;
+  if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); demoMove(1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); demoMove(-1); }
+  else if (/^[1-9]$/.test(e.key) && +e.key <= DEMO.length) { e.preventDefault(); demoApply(+e.key - 1); }
+});
+
 window.addEventListener("hashchange", route);
+
+q("demo-toggle").onclick = function () { if (S.demo == null) demoStart(); else demoExit(); };
 
 renderRepoSwitch();
 route();

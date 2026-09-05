@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8765", "--directory", "ui"],
       "port": 8765
+    },
+    {
+      "name": "sih-docs",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8790", "--directory", ".."],
+      "port": 8790
     }
   ]
 }

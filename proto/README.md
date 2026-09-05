@@ -17,7 +17,7 @@ Nothing to install beyond what the scan needs, and nothing to configure.
 python engine/run.py
 ```
 
-Takes about 16 seconds. It scans every target in `targets/`, parses the certificates,
+Takes about 13 seconds. It scans every target in `targets/`, parses the certificates,
 runs the real cryptographic benchmark, and writes `ui/data.js` plus `data/scan_results.json`
 and one CycloneDX CBOM per target.
 
@@ -51,6 +51,7 @@ engine/
 ui/
   index.html       the dashboard (open this)
   app.js  styles.css  data.js
+  ecdat-console.artifact.html   single-file build for sharing (engine/build_artifact.py)
 targets/
   nivesh-core      demo estate + ecdat-manifest.yaml  (fictional org, real scannable files)
   paramiko  jjwt  django    real upstream repositories, cloned unmodified
@@ -60,32 +61,49 @@ data/
 
 ---
 
-## The five things to show a jury
+## Showing it to a jury
 
-Roughly nine minutes, in this order.
+The console drives its own demonstration. Press **Guided walkthrough** in the top bar
+(or open the tool and hit it before you start talking) and the seven beats below run off
+the arrow keys — each step sets the target, the view and any filter it needs, so nothing
+has to be hunted for in front of an evaluator.
+
+| Key | Does |
+|---|---|
+| `→` `Space` | next step |
+| `←` | previous step |
+| `1`–`7` | jump straight to a step |
+| `Esc` | close the evidence drawer, then leave the walkthrough |
+
+Roughly nine minutes. The rail prints the line to say; what follows is why each beat is there.
 
 ### 1 · Command Centre — "we actually scanned real code"
 3,111 source files across paramiko, JJWT and Django — cloned from upstream, not written by us —
 plus the demo estate. 206 findings, 120 quantum-vulnerable.
 
-Point at **Already broken today**. Not everything here is a quantum problem: MD5 and SHA-1 are
+Point at **Broken today**. Not everything here is a quantum problem: MD5 and SHA-1 are
 exploitable *now*. A tool that files those under "future quantum risk" has mis-ranked them.
 
 ### 2 · Crypto Inventory — "every number traces to a line of code"
-Click the top finding. The drawer shows the file, line, column, the matched source text, the
-enclosing function, the rule id that fired, and the full arithmetic behind both the criticality
-score and the risk score.
+The step opens the top finding for you: `legacy_dedupe_key()` in the KYC service —
+**SHA-1 over an Aadhaar number**.
 
-The top finding is `legacy_dedupe_key()` in the KYC service — **SHA-1 over an Aadhaar number**.
+The drawer shows the file, line, column, the matched source text, the enclosing function,
+the rule id that fired, and the full arithmetic behind both the criticality score and the
+risk score.
 
 ### 3 · Business Criticality — the gap no competitor fills
 Every commercial PQC scanner stops at technical severity. None answer *what does this protect?*
 
-Show the manifest-driven path on Nivesh, then **switch to paramiko**: 0 manifest-confirmed,
-17 path-heuristic, 38 unknown. ECDAT degrades honestly and labels every guess as a guess.
-That contrast is the feature.
+The weights are on screen and live in `engine/criticality.py`. An auditor can recompute any
+score by hand — there is no model in the scoring path.
 
-### 4 · Mosca Horizon — the problem statement names this framework explicitly
+### 4 · Business Criticality on paramiko — honest degradation
+Same screen, upstream repository, no manifest: 0 manifest-confirmed, 17 path-heuristic,
+38 unknown. ECDAT degrades honestly and labels every guess as a guess. That contrast is
+the feature, which is why it gets its own beat.
+
+### 5 · Mosca Horizon — the problem statement names this framework explicitly
 `X + Y > Z`. Drag Z.
 
 The moment worth rehearsing: **treasury-archive scores only "high" on criticality — it is offline —
@@ -95,11 +113,11 @@ for 25 years and re-sealing the archive takes 4. Meanwhile payment-api scores "c
 
 Severity and urgency are different questions. Only the second one tells you what to start on Monday.
 
-### 5 · Migration Passport — measured, not estimated
+### 6 · Migration Passport — measured, not estimated
 Every number here was measured on the machine during the run, using OpenSSL 4.0.1's native
 ML-KEM and ML-DSA.
 
-- ML-DSA-65 signs at **1.4×** the cost of RSA-2048 — negligible.
+- ML-DSA-65 signs at **1.3×** the cost of RSA-2048 — negligible.
 - Its signature is **3,309 bytes against 256** — 12.9× larger.
 - A three-certificate TLS chain goes from **2,637 to 16,824 bytes**, overflowing TCP's
   ~14,600-byte initial congestion window and adding a round trip to every fresh connection.
@@ -107,8 +125,18 @@ ML-KEM and ML-DSA.
 **Speed is not the blocker. Size is.** That is the finding, and it only exists because the
 tool measured instead of guessing.
 
-One honest surprise worth keeping: ML-KEM-768 is **5.9× faster** than ECDH-P384 on this machine.
+One honest surprise worth keeping: ML-KEM-768 is **6.1× faster** than ECDH-P384 on this machine.
 Post-quantum is not universally slower.
+
+This screen is machine-scoped, not target-scoped — the benchmark describes the host, not the
+repository — and the tool says so on the page when a target other than Nivesh is selected.
+
+### 7 · Method & Limits — close on what it does not do
+Say the limits before the jury asks for them. The screen is written to be read aloud.
+
+**CBOM Export** is not in the walkthrough. It is the screen to open when someone asks about
+interoperability — CycloneDX 1.6, downloadable, and the same document that lands in
+`data/cbom-<target>.json`.
 
 ---
 
@@ -154,4 +182,4 @@ Stated plainly on the **Method & Limits** screen inside the tool, and worth repe
 
 FIPS 203 (ML-KEM) · FIPS 204 (ML-DSA) · FIPS 205 (SLH-DSA) · NIST IR 8547 (PQC transition timeline) ·
 NIST SP 800-57 (key-size minimums) · CycloneDX 1.6 (CBOM format) · RFC 5280 (X.509 Key Usage) ·
-RFC 8996 (TLS 1.0/1.1 deprecation) · RFC 7465 (RC4 prohibition) · Mosca (2015).
+RFC 8996 (TLS 1.0/1.1 deprecation) · RFC 7465 (RC4 prohibition) · Mosca (2018, IEEE Security & Privacy).

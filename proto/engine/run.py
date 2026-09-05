@@ -39,7 +39,7 @@ NOW = datetime.datetime(2026, 8, 31, tzinfo=datetime.timezone.utc)
 REPOS = [
     dict(id="nivesh-core", name="Nivesh Financial Services",
          kind="demo-estate",
-         description="A six-service financial estate with a completed ECDAT service manifest. "
+         description="A seven-service financial estate with a completed ECDAT service manifest. "
                      "Every criticality label here traces to a declared manifest entry.",
          manifest="ecdat-manifest.yaml",
          upstream=None,
